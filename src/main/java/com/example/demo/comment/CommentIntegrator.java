@@ -94,9 +94,10 @@ public class CommentIntegrator implements Integrator {
     private void fieldComment(PersistentClass persistentClass, String columnName) {
         try {
             Field field = persistentClass.getMappedClass().getDeclaredField(columnName);
-            if (field.isAnnotationPresent(Comment.class)) {
-                String comment = field.getAnnotation(Comment.class).value();
-                String sqlColumnName= persistentClass.getProperty(columnName).getValue().getColumnIterator().next().getText();
+            Comment declaredAnnotationsByType = field.getDeclaredAnnotation(Comment.class);
+            if (declaredAnnotationsByType != null) {
+                String comment = field.getDeclaredAnnotation(Comment.class).value();
+                String sqlColumnName = persistentClass.getProperty(columnName).getValue().getColumnIterator().next().getText();
                 Iterator<org.hibernate.mapping.Column> columnIterator = persistentClass.getTable().getColumnIterator();
                 while (columnIterator.hasNext()) {
                     org.hibernate.mapping.Column column = columnIterator.next();
